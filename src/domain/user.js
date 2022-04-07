@@ -1,49 +1,24 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
 
-/**
- * @param {User} user
- * @returns {User}
- */
-export async function createNewUser(user) {
-  const createdUser = await dbClient.user.create({
-    data: {
-      email: user.email,
-      password: user.passwordHash,
-      profile: {
-        create: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          bio: user.bio,
-          githubUrl: user.githubUrl
-        }
-      }
-    },
-    include: {
-      profile: true
-    }
-  })
-
-  return User.fromDb(createdUser)
-}
-
-export class User {
-  constructor(
-    id,
-    firstName,
-    lastName,
-    email,
-    bio,
-    githubUrl,
-    passwordHash = null
-  ) {
-    this.id = id
-    this.firstName = firstName
-    this.lastName = lastName
-    this.email = email
-    this.bio = bio
-    this.githubUrl = githubUrl
-    this.passwordHash = passwordHash
+export default class User {
+  /**
+   * This is JSDoc - a way for us to tell other developers what types functions/methods
+   * take as inputs, what types they return, and other useful information that JS doesn't have built in
+   * @tutorial https://www.valentinog.com/blog/jsdoc
+   *
+   * @param { { id: string, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string }} } user
+   * @returns {User}
+   */
+  static fromDb(user) {
+    return new User(
+      user.id,
+      user.profile.firstName,
+      user.profile.lastName,
+      user.email,
+      user.profile.bio,
+      user.profile.githubUrl
+    )
   }
 
   static async fromJson(json) {
@@ -64,6 +39,24 @@ export class User {
     )
   }
 
+  constructor(
+    id,
+    firstName,
+    lastName,
+    email,
+    bio,
+    githubUrl,
+    passwordHash = null
+  ) {
+    this.id = id
+    this.firstName = firstName
+    this.lastName = lastName
+    this.email = email
+    this.bio = bio
+    this.githubUrl = githubUrl
+    this.passwordHash = passwordHash
+  }
+
   toJSON() {
     return {
       user: {
@@ -77,14 +70,29 @@ export class User {
     }
   }
 
-  static fromDb(user) {
-    return new User(
-      user.id,
-      user.profile.firstName,
-      user.profile.lastName,
-      user.email,
-      user.profile.bio,
-      user.profile.githubUrl
-    )
+  /**
+   * @returns {User}
+   *  A user instance containing an ID, representing the user data created in the database
+   */
+  async save() {
+    const createdUser = await dbClient.user.create({
+      data: {
+        email: this.email,
+        password: this.passwordHash,
+        profile: {
+          create: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            bio: this.bio,
+            githubUrl: this.githubUrl
+          }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return User.fromDb(createdUser)
   }
 }
