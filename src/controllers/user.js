@@ -1,10 +1,19 @@
-import User from '../domain/User.js'
+import { User, createNewUser } from '../domain/user.js'
 
-export const create = (req, res) => {
-  const userToCreate = User.fromJson(req.body)
+export const create = async (req, res) => {
+  const userToCreate = await User.fromJson(req.body)
 
-  res.status(201).json({
-    status: 'success',
-    data: userToCreate
-  })
+  try {
+    const createdUser = await createNewUser(userToCreate)
+
+    res.status(201).json({
+      status: 'success',
+      data: createdUser
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to create new user'
+    })
+  }
 }
