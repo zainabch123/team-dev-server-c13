@@ -11,6 +11,10 @@
 5. `npx prisma migrate reset` to apply migrations to your db
 6. `npm run dev` to run the app
 
+## Sample Requests
+
+If you use [Insomnia](https://insomnia.rest/), you can import [this request collection .json file](./assets/insomnia_request_collection.json) in the `./assets/` folder to hit the ground running with all of the requests ready to test.
+
 ## API Spec
 
 <details>
@@ -115,6 +119,57 @@ No body required
   "data": {
     "cohort": {
       "id": 3
+    }
+  }
+}
+</pre>
+</details>
+
+<details>
+<summary><strong>POST /log</strong></summary>
+<em>Only auth tokens for users with the TEACHER role can use this route</em>
+
+<strong>Headers</strong>
+<pre>Authorization: Bearer &lt;token&gt;</pre>
+<strong>Example body</strong>
+<pre>
+{
+  "date": "2022-05-05",
+  "cohort_id": 3,
+  "lines": [
+    {
+      "content": "Caught up with James"
+    },
+    {
+      "content": "Punished Joel"
+    }
+  ]
+}
+</pre>
+<strong>Example response</strong>
+<pre>
+{
+  "status": "success",
+  "data": {
+    "log": {
+      "id": 1,
+      "cohort_id": 3,
+      "date": "2022-05-05",
+      "author": {
+        "id": 5,
+        "first_name": "Nathan",
+        "last_name": "King"
+      },
+      "lines": [
+        {
+          "id": 1,
+          "content": "Caught up with James"
+        },
+        {
+          "id": 2,
+          "content": "Punished Joel"
+        }
+      ]
     }
   }
 }
