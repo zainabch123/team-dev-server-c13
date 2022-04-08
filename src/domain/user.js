@@ -7,12 +7,13 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: string, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string }} } user
+   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string } } } user
    * @returns {User}
    */
   static fromDb(user) {
     return new User(
       user.id,
+      user.cohortId,
       user.profile.firstName,
       user.profile.lastName,
       user.email,
@@ -30,6 +31,7 @@ export default class User {
 
     return new User(
       null,
+      null,
       first_name,
       last_name,
       email,
@@ -41,6 +43,7 @@ export default class User {
 
   constructor(
     id,
+    cohortId,
     firstName,
     lastName,
     email,
@@ -49,6 +52,7 @@ export default class User {
     passwordHash = null
   ) {
     this.id = id
+    this.cohortId = cohortId
     this.firstName = firstName
     this.lastName = lastName
     this.email = email
@@ -61,6 +65,7 @@ export default class User {
     return {
       user: {
         id: this.id,
+        cohort_id: this.cohortId,
         first_name: this.firstName,
         last_name: this.lastName,
         email: this.email,
@@ -79,6 +84,7 @@ export default class User {
       data: {
         email: this.email,
         password: this.passwordHash,
+        cohortId: this.cohortId,
         profile: {
           create: {
             firstName: this.firstName,
