@@ -101,6 +101,27 @@
 </details>
 
 <details>
+<summary><strong>POST /cohort</strong></summary>
+<em>Only auth tokens for users with the TEACHER role can use this route</em>
+
+<strong>Headers</strong>
+<pre>Authorization: Bearer &lt;token&gt;</pre>
+No body required
+
+<strong>Example response</strong>
+<pre>
+{
+  "status": "success",
+  "data": {
+    "cohort": {
+      "id": 3
+    }
+  }
+}
+</pre>
+</details>
+
+<details>
 <summary><strong>GET /posts</strong></summary>
 <strong>Headers</strong>
 <pre>Authorization: Bearer &lt;token&gt;</pre>
@@ -201,6 +222,31 @@ The <em>first_name</em> query parameter is optional and case sensitive
         "github_url": "https://github.com/vherus"
       }
     ]
+  }
+}
+</pre>
+</details>
+
+<details>
+<summary><strong>PATCH /user/:id</strong></summary>
+<em>Only auth tokens for users with the TEACHER role can use this route</em>
+
+<strong>Headers</strong>
+<pre>Authorization: Bearer &lt;token&gt;</pre>
+<strong>Example body</strong>
+<pre>
+{
+  "cohort_id": 3
+}
+</pre>
+<strong>Example response</strong>
+<pre>
+{
+  "status": "success",
+  "data": {
+    "user": {
+      "cohort_id": 3
+    }
   }
 }
 </pre>
