@@ -1,8 +1,10 @@
 import { Router } from 'express'
-import { create } from '../controllers/user.js'
+import { create, getById } from '../controllers/user.js'
+import { validateAuthentication } from '../middleware/auth.js'
 
 const router = Router()
 
 router.post('/', create)
+router.get('/:id', validateAuthentication, getById)
 
 export default router

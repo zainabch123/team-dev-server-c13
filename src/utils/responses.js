@@ -3,6 +3,7 @@ const STATUS_MESSAGES = {
   201: 'success',
   400: 'fail',
   401: 'fail',
+  404: 'fail',
   500: 'error'
 }
 
