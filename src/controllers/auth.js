@@ -1,7 +1,7 @@
 import User from '../domain/User.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../utils/config.js'
+import { JWT_EXPIRY, JWT_SECRET } from '../utils/config.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const login = async (req, res) => {
@@ -32,7 +32,7 @@ export const login = async (req, res) => {
 }
 
 function generateJwt(userId) {
-  return jwt.sign({ userId }, JWT_SECRET)
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRY })
 }
 
 async function validateCredentials(password, user) {

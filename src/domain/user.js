@@ -109,9 +109,17 @@ export default class User {
   }
 
   static async findByEmail(email) {
+    return User._findByUnique('email', email)
+  }
+
+  static async findById(id) {
+    return User._findByUnique('id', id)
+  }
+
+  static async _findByUnique(key, value) {
     const foundUser = await dbClient.user.findUnique({
       where: {
-        email
+        [key]: value
       },
       include: {
         profile: true
