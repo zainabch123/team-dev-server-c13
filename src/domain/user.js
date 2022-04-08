@@ -18,7 +18,9 @@ export default class User {
       user.profile.lastName,
       user.email,
       user.profile.bio,
-      user.profile.githubUrl
+      user.profile.githubUrl,
+      user.password,
+      user.role
     )
   }
 
@@ -49,7 +51,8 @@ export default class User {
     email,
     bio,
     githubUrl,
-    passwordHash = null
+    passwordHash = null,
+    role = 'STUDENT'
   ) {
     this.id = id
     this.cohortId = cohortId
@@ -59,6 +62,7 @@ export default class User {
     this.bio = bio
     this.githubUrl = githubUrl
     this.passwordHash = passwordHash
+    this.role = role
   }
 
   toJSON() {
@@ -66,6 +70,7 @@ export default class User {
       user: {
         id: this.id,
         cohort_id: this.cohortId,
+        role: this.role,
         first_name: this.firstName,
         last_name: this.lastName,
         email: this.email,
@@ -85,6 +90,7 @@ export default class User {
         email: this.email,
         password: this.passwordHash,
         cohortId: this.cohortId,
+        role: this.role,
         profile: {
           create: {
             firstName: this.firstName,
@@ -100,5 +106,22 @@ export default class User {
     })
 
     return User.fromDb(createdUser)
+  }
+
+  static async findByEmail(email) {
+    const foundUser = await dbClient.user.findUnique({
+      where: {
+        email
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    if (foundUser) {
+      return User.fromDb(foundUser)
+    }
+
+    return null
   }
 }
