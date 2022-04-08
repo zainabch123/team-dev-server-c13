@@ -14,7 +14,7 @@
 ## API Spec
 
 <details>
-<summary><strong>POST /user</strong> <small>register a new user</small></summary>
+<summary><strong>POST /user</strong></summary>
 <strong>Example body</strong>
 <pre>
 {
