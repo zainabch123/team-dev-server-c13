@@ -177,7 +177,7 @@ No body required
 </details>
 
 <details>
-<summary><strong>GET /posts</strong></summary>
+<summary><strong>GET /posts</strong> (hardcoded responses)</summary>
 <strong>Headers</strong>
 <pre>Authorization: Bearer &lt;token&gt;</pre>
 <strong>Example response</strong>
