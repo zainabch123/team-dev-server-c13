@@ -1,4 +1,4 @@
-import User from '../domain/User.js'
+import User from '../domain/user.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { JWT_EXPIRY, JWT_SECRET } from '../utils/config.js'
