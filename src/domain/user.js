@@ -116,6 +116,14 @@ export default class User {
     return User._findByUnique('id', id)
   }
 
+  static async findManyByFirstName(firstName) {
+    return User._findMany('firstName', firstName)
+  }
+
+  static async findAll() {
+    return User._findMany()
+  }
+
   static async _findByUnique(key, value) {
     const foundUser = await dbClient.user.findUnique({
       where: {
@@ -131,5 +139,25 @@ export default class User {
     }
 
     return null
+  }
+
+  static async _findMany(key, value) {
+    const query = {
+      include: {
+        profile: true
+      }
+    }
+
+    if (key !== undefined && value !== undefined) {
+      query.where = {
+        profile: {
+          [key]: value
+        }
+      }
+    }
+
+    const foundUsers = await dbClient.user.findMany(query)
+
+    return foundUsers.map((user) => User.fromDb(user))
   }
 }

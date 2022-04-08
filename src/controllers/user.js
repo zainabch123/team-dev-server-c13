@@ -34,3 +34,24 @@ export const getById = async (req, res) => {
     return sendMessageResponse(res, 500, 'Unable to get user')
   }
 }
+
+export const getAll = async (req, res) => {
+  // eslint-disable-next-line camelcase
+  const { first_name: firstName } = req.query
+
+  let foundUsers
+
+  if (firstName) {
+    foundUsers = await User.findManyByFirstName(firstName)
+  } else {
+    foundUsers = await User.findAll()
+  }
+
+  const formattedUsers = foundUsers.map((user) => {
+    return {
+      ...user.toJSON().user
+    }
+  })
+
+  return sendDataResponse(res, 200, { users: formattedUsers })
+}
