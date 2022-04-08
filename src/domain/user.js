@@ -19,6 +19,7 @@ export default class User {
       user.email,
       user.profile.bio,
       user.profile.githubUrl,
+      user.password,
       user.role
     )
   }
@@ -105,5 +106,22 @@ export default class User {
     })
 
     return User.fromDb(createdUser)
+  }
+
+  static async findByEmail(email) {
+    const foundUser = await dbClient.user.findUnique({
+      where: {
+        email
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    if (foundUser) {
+      return User.fromDb(foundUser)
+    }
+
+    return null
   }
 }
