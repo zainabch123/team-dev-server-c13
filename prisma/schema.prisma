@@ -24,6 +24,7 @@ model User {
   profile     Profile?
   cohortId    Int?
   cohort      Cohort?   @relation(fields: [cohortId], references: [id])
+  posts       Post[]
 }
 
 model Profile {
@@ -39,4 +40,11 @@ model Profile {
 model Cohort {
   id      Int           @id @default(autoincrement())
   users   User[]
+}
+
+model Post {
+  id      Int           @id @default(autoincrement())
+  content String
+  userId  Int
+  user    User          @relation(fields: [userId], references: [id])
 }
