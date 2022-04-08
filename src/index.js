@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/user', userRouter)
 app.use('/post', postRouter)
+app.use('/posts', postRouter)
 app.use('/', authRouter)
 
 app.get('*', (req, res) => {

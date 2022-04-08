@@ -1,8 +1,9 @@
 import { sendDataResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
+import User from '../domain/user.js'
 
-export function validateAuthentication(req, res, next) {
+export async function validateAuthentication(req, res, next) {
   const header = req.header('authorization')
 
   if (!header) {
@@ -26,6 +27,12 @@ export function validateAuthentication(req, res, next) {
       authentication: 'Invalid or missing access token'
     })
   }
+
+  const decodedToken = jwt.decode(token)
+  const foundUser = await User.findById(decodedToken.userId)
+  delete foundUser.passwordHash
+
+  req.user = foundUser
 
   next()
 }
