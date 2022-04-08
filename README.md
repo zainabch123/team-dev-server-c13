@@ -81,7 +81,7 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 </details>
 
 <details>
-<summary><strong>POST /post</strong></summary>
+<summary><strong>POST /post</strong> (hardcoded responses)</summary>
 <strong>Headers</strong>
 <pre>Authorization: Bearer &lt;token&gt;</pre>
 <strong>Example body</strong>
@@ -126,7 +126,7 @@ No body required
 </details>
 
 <details>
-<summary><strong>POST /log</strong></summary>
+<summary><strong>POST /log</strong> (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
@@ -283,7 +283,7 @@ The <em>first_name</em> query parameter is optional and case sensitive
 </details>
 
 <details>
-<summary><strong>PATCH /user/:id</strong></summary>
+<summary><strong>PATCH /user/:id</strong> (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
