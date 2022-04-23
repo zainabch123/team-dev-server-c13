@@ -4,6 +4,11 @@
 
 1. Copy `.env.example` and name it `.env`
 2. Create a postgres database and add its URL into the `DATABASE_URL` environment variable, keeping `?schema=prisma` on the end
+    - Postgres db URLs are in the format: `postgres://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DATABASE_NAME]`
+    - Note that prisma doesn't store data in the public schema, so set the  search path to prisma in your db client. For PSQL client
+    - use `\dn` to show available schemas
+    - use SQL to set the search path to the correct schema: `SET search_path to prisma;`
+    - `\dt` will then show available tables (once migrations have been run)
 3. If using a cloud database provider:
     - Create another database and run `create schema shadow` on it
     - Add its URL into the `SHADOW_DATABASE_URL` env var, keeping `?schema=shadow` on the end
@@ -18,9 +23,19 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 ## API Spec
 
 <details>
-<summary><strong>POST /user</strong></summary>
+<summary><strong>POST /user</strong>
+</summary>
+
+<strong>Example Request</strong>
+
+```sh
+curl -X POST  http://localhost:4000/user \
+-H 'Content-Type: application/json' \
+-d '{"first_name":"Nathan","last_name":"King","email":"ngk5@gmail.com","password":"mysecurepassword","biography":"Hello world","github_url":"https://github.com/vherus"}'
+```
 <strong>Example body</strong>
-<pre>
+
+```sh
 {
   "first_name": "Nathan",
   "last_name": "King",
@@ -29,9 +44,10 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
   "biography": "Hello world",
   "github_url": "https://github.com/vherus"
 }
-</pre>
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -47,20 +63,24 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>POST /login</strong></summary>
+<summary><strong>POST /login</strong>
+</summary>
 <strong>Example body</strong>
-<pre>
+
+
+```sh
 {
   "email": "ngk5@gmail.com",
   "password": "mysecurepassword"
 }
-</pre>
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -77,21 +97,27 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>POST /post</strong> (hardcoded responses)</summary>
+<summary><strong>POST /post</strong>
+ (hardcoded responses)</summary>
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example body</strong>
-<pre>
+
+```sh
 {
   "content": "Hello world!"
 }
-</pre>
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -101,19 +127,24 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>POST /cohort</strong></summary>
+<summary><strong>POST /cohort</strong>
+</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 No body required
 
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -122,17 +153,22 @@ No body required
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>POST /log</strong> (hardcoded responses)</summary>
+<summary><strong>POST /log</strong>
+ (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example body</strong>
-<pre>
+
+```sh
 {
   "date": "2022-05-05",
   "cohort_id": 3,
@@ -145,9 +181,10 @@ No body required
     }
   ]
 }
-</pre>
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -173,15 +210,20 @@ No body required
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>GET /posts</strong> (hardcoded responses)</summary>
+<summary><strong>GET /posts</strong>
+ (hardcoded responses)</summary>
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -217,15 +259,20 @@ No body required
     ]
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>GET /user/:id</strong></summary>
+<summary><strong>GET /user/:id</strong>
+</summary>
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -241,17 +288,22 @@ No body required
     }
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>GET /users?first_name=Name</strong></summary>
+<summary><strong>GET /users?first_name=Name</strong>
+</summary>
 The <em>first_name</em> query parameter is optional and case sensitive
 
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -279,23 +331,29 @@ The <em>first_name</em> query parameter is optional and case sensitive
     ]
   }
 }
-</pre>
+```
 </details>
 
 <details>
-<summary><strong>PATCH /user/:id</strong> (hardcoded responses)</summary>
+<summary><strong>PATCH /user/:id</strong>
+ (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
-<pre>Authorization: Bearer &lt;token&gt;</pre>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
 <strong>Example body</strong>
-<pre>
+
+```sh
 {
   "cohort_id": 3
 }
-</pre>
+```
 <strong>Example response</strong>
-<pre>
+
+```sh
 {
   "status": "success",
   "data": {
@@ -304,5 +362,5 @@ The <em>first_name</em> query parameter is optional and case sensitive
     }
   }
 }
-</pre>
+```
 </details>
