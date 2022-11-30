@@ -23,13 +23,13 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 ## API Spec
 
 <details>
-<summary><strong>POST /user</strong>
+<summary><strong>POST /users</strong>
 </summary>
 
 <strong>Example Request</strong>
 
 ```sh
-curl -X POST  http://localhost:4000/user \
+curl -X POST  http://localhost:4000/users \
 -H 'Content-Type: application/json' \
 -d '{"first_name":"Nathan","last_name":"King","email":"ngk5@gmail.com","password":"mysecurepassword","biography":"Hello world","github_url":"https://github.com/vherus"}'
 ```
@@ -101,7 +101,7 @@ curl -X POST  http://localhost:4000/user \
 </details>
 
 <details>
-<summary><strong>POST /post</strong>
+<summary><strong>POST /posts</strong>
  (hardcoded responses)</summary>
 <strong>Headers</strong>
 
@@ -131,7 +131,7 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
-<summary><strong>POST /cohort</strong>
+<summary><strong>POST /cohorts</strong>
 </summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
@@ -157,7 +157,7 @@ No body required
 </details>
 
 <details>
-<summary><strong>POST /log</strong>
+<summary><strong>POST /logs</strong>
  (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
@@ -263,7 +263,7 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
-<summary><strong>GET /user/:id</strong>
+<summary><strong>GET /users/:id</strong>
 </summary>
 <strong>Headers</strong>
 
@@ -335,7 +335,7 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
-<summary><strong>PATCH /user/:id</strong>
+<summary><strong>PATCH /users/:id</strong>
  (hardcoded responses)</summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
