@@ -27,7 +27,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUser'
+              $ref: '#/components/schemas/User'
       responses:
         '201':
           description: Created
@@ -119,7 +119,10 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: '#/components/schemas/User'
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
 
         '400':
           description: fail
@@ -136,8 +139,47 @@ paths:
     patch:
       tags:
         - user
-      summary: Update a user
-      description: Only users with a TEACHER role can update the cohortId or role. Users with Students role can only update their own details.
+      summary: Update the cohort to which this user belongs
+      description: Only users with a TEACHER role can call this endpoint.
+      operationId: userUpdateCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id that needs to be updated'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Cohort Id to add user to
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cohortId:
+                  type: integer
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohortAddUser'
+        '401':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/update/{id}:
+    patch:
+      tags:
+        - user
+      summary: Update the profile of this user
+      description: Updates the profile of this user. Only teachers can update cohortId or role. Users with Students role can only update their own profile.
       operationId: userUpdate
       security:
         - bearerAuth: []
@@ -261,46 +303,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /posts/{id}:
+  /posts/postLike:
     get:
       tags:
         - post
-      summary: Get a single post
-      description: Get a post by ID
-      operationId: getPosts
+      summary: Get all post likes
+      description: get all post likes
+      operationId: getPostLikes
       security:
         - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: 'Post ID'
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SinglePost'
+                $ref: '#/components/schemas/AllPostLikes'
         '401':
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '404':
-          description: Post not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+
+  /posts/{id}/postLike:
     post:
       tags:
         - post
       summary: Like a post
-      description: This can only be done by the logged in user. No request body is required, the users ID can be retrieved from the auth token.
+      description: This can only be done by the logged in user.
       operationId: likePost
       security:
         - bearerAuth: []
@@ -309,13 +340,25 @@ paths:
           in: path
           description: 'The id of the post that is being liked.'
           required: true
+      requestBody:
+        description: Like (or not) a post
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: boolean
+                postLikeId:
+                  type: integer
+                  nullable: true
       responses:
         201:
           description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SinglePost'
+                $ref: '#/components/schemas/PostLike'
         404:
           description: fail
           content:
@@ -328,6 +371,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{id}:
     patch:
       tags:
         - post
@@ -350,19 +394,15 @@ paths:
           schema:
             type: string
       responses:
-        201:
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SinglePost'
-        401:
+        '201':
+          description: successful
+        '401':
           description: Unauthorised
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        400:
+        '400':
           description: bad request
           content:
             application/json:
@@ -379,30 +419,35 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'The ID of the post'
+          description: 'get post by its id'
           required: true
           schema:
             type: string
       responses:
-        201:
-          description: success
+        '201':
+          description: successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SinglePost'
-        401:
+                $ref: '#/components/schemas/DeletePost'
+        '401':
           description: authentication failed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
+        '404':
           description: not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+        '500':
+          description: error creating comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts/{id}/comment:
     post:
       tags:
@@ -709,7 +754,7 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                cohortName:
                   type: string
                 startDate:
                   type: string
@@ -721,12 +766,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Cohort'
+                $ref: '#/components/schemas/CreatedCohort'
         400:
           description: fail
           content:
@@ -764,12 +804,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Note'
+                $ref: '#/components/schemas/Note'
         400:
           description: fail
           content:
@@ -813,26 +848,9 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
       responses:
-        201:
-          description: success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Note'
+        '201':
+          description: successful
         '401':
           description: Unauthorised
           content:
@@ -861,17 +879,12 @@ paths:
           schema:
             type: string
       responses:
-        201:
-          description: success
+        '201':
+          description: successful
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Note'
+                $ref: '#/components/schemas/DeleteNote'
         '401':
           description: authentication failed
           content:
@@ -886,6 +899,97 @@ paths:
                 $ref: '#/components/schemas/Error'
         '500':
           description: error deleting Note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /conversations:
+    post:
+      tags:
+        - conversation
+      summary: Create conversation
+      description: This can only be done by a logged in user
+      operationId: createConversation
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created conversation object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  name:
+                    type: string
+                  userIds:
+                    type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - conversation
+      summary: Get all conversations
+      description: get all conversations
+      operationId: getConversations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '401':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /conversations/{id}/:
+    get:
+      tags:
+        - conversation
+      summary: Get conversation by user id
+      description: ''
+      operationId: getConversationByUserID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the user for which we need to fetch conversations'
+          required: true
+          schema:
+            type: int
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
           content:
             application/json:
               schema:
@@ -1094,6 +1198,7 @@ components:
               properties:
                 id:
                   type: integer
+                  format: int64
                 content:
                   type: string
     DeletePost:
@@ -1206,7 +1311,8 @@ components:
       properties:
         id:
           type: integer
-        name:
+          format: int64
+        cohortName:
           type: string
         startDate:
           type: string
@@ -1304,38 +1410,19 @@ components:
     User:
       type: object
       properties:
-        id:
-          type: integer
-        email:
-          type: string
         role:
           type: string
-        cohortId:
-          type: integer
-        profile:
-          type: object
-          properties:
-            firstName:
-              type: string
-            lastName:
-              type: string
-            bio:
-              type: string
-            githubUrl:
-              type: string
-
-    CreateUser:
-      type: object
-      properties:
         firstName:
           type: string
         lastName:
           type: string
         email:
           type: string
-        bio:
+        biography:
           type: string
         githubUrl:
+          type: string
+        profileUrl:
           type: string
         password:
           type: string
@@ -1351,14 +1438,22 @@ components:
           type: integer
         role:
           type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        bio:
-          type: string
-        githubUrl:
-          type: string
+        profile:
+          type: object
+          properties:
+            update:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                bio:
+                  type: string
+                githubUrl:
+                  type: string
+                profileUrl:
+                  type: string
 
     Posts:
       type: object
@@ -1372,8 +1467,11 @@ components:
             properties:
               id:
                 type: integer
+                format: int64
               content:
                 type: string
+              userId:
+                type: integer
               createdAt:
                 type: string
                 format: string
@@ -1383,6 +1481,8 @@ components:
               user:
                 type: object
                 properties:
+                  email:
+                    type: string
                   id:
                     type: integer
                   cohortId:
@@ -1392,6 +1492,10 @@ components:
                   profile:
                     type: object
                     properties:
+                      id:
+                        type: integer
+                      userId:
+                        type: integer
                       firstName:
                         type: string
                       lastName:
@@ -1407,6 +1511,11 @@ components:
                 items:
                   type: object
                   properties:
+                    userId:
+                      type: integer
+                      format: int64
+                    postId:
+                      type: integer
                     createdAt:
                       type: string
                       format: string
@@ -1416,6 +1525,8 @@ components:
                     user:
                       type: object
                       properties:
+                        email:
+                          type: string
                         id:
                           type: integer
                         cohortId:
@@ -1425,6 +1536,10 @@ components:
                         profile:
                           type: object
                           properties:
+                            id:
+                              type: integer
+                            userId:
+                              type: integer
                             firstName:
                               type: string
                             lastName:
@@ -1444,6 +1559,11 @@ components:
                       type: integer
                     content:
                       type: string
+                    userId:
+                      type: integer
+                      format: int64
+                    postId:
+                      type: integer
                     createdAt:
                       type: string
                       format: string
@@ -1453,6 +1573,8 @@ components:
                     user:
                       type: object
                       properties:
+                        email:
+                          type: string
                         id:
                           type: integer
                         cohortId:
@@ -1462,6 +1584,10 @@ components:
                         profile:
                           type: object
                           properties:
+                            id:
+                              type: integer
+                            userId:
+                              type: integer
                             firstName:
                               type: string
                             lastName:
@@ -1477,6 +1603,11 @@ components:
                       items:
                         type: object
                         properties:
+                          userId:
+                            type: integer
+                            format: int64
+                          postId:
+                            type: integer
                           createdAt:
                             type: string
                             format: string
@@ -1486,6 +1617,8 @@ components:
                           user:
                             type: object
                             properties:
+                              email:
+                                type: string
                               id:
                                 type: integer
                               cohortId:
@@ -1495,6 +1628,10 @@ components:
                               profile:
                                 type: object
                                 properties:
+                                  id:
+                                    type: integer
+                                  userId:
+                                    type: integer
                                   firstName:
                                     type: string
                                   lastName:
@@ -1505,149 +1642,6 @@ components:
                                     type: string
                                   profileImageUrl:
                                     type: string
-    SinglePost:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: object
-          properties:
-            id:
-              type: integer
-            content:
-              type: string
-            createdAt:
-              type: string
-              format: string
-            updatedAt:
-              type: string
-              format: string
-            user:
-              type: object
-              properties:
-                id:
-                  type: integer
-                cohortId:
-                  type: integer
-                role:
-                  type: string
-                profile:
-                  type: object
-                  properties:
-                    firstName:
-                      type: string
-                    lastName:
-                      type: string
-                    bio:
-                      type: string
-                    githubUrl:
-                      type: string
-                    profileImageUrl:
-                      type: string
-            likes:
-              type: array
-              items:
-                type: object
-                properties:
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
-                    type: string
-                    format: string
-                  user:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      profile:
-                        type: object
-                        properties:
-                          firstName:
-                            type: string
-                          lastName:
-                            type: string
-                          bio:
-                            type: string
-                          githubUrl:
-                            type: string
-                          profileImageUrl:
-                            type: string
-            comments:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  content:
-                    type: string
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
-                    type: string
-                    format: string
-                  user:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      profile:
-                        type: object
-                        properties:
-                          firstName:
-                            type: string
-                          lastName:
-                            type: string
-                          bio:
-                            type: string
-                          githubUrl:
-                            type: string
-                          profileImageUrl:
-                            type: string
-                  likes:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        createdAt:
-                          type: string
-                          format: string
-                        updatedAt:
-                          type: string
-                          format: string
-                        user:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                            cohortId:
-                              type: integer
-                            role:
-                              type: string
-                            profile:
-                              type: object
-                              properties:
-                                firstName:
-                                  type: string
-                                lastName:
-                                  type: string
-                                bio:
-                                  type: string
-                                githubUrl:
-                                  type: string
-                                profileImageUrl:
-                                  type: string
     CreatedCohort:
       type: object
       properties:
@@ -1692,23 +1686,22 @@ components:
               properties:
                 id:
                   type: integer
-                email:
-                  type: string
                 cohortId:
                   type: integer
                 role:
                   type: string
-                profile:
-                  type: object
-                  properties:
-                    firstName:
-                      type: string
-                    lastName:
-                      type: string
-                    bio:
-                      type: string
-                    githubUrl:
-                      type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                biography:
+                  type: string
+                email:
+                  type: string
+                githubUrl:
+                  type: string
+                profileUrl:
+                  type: string
     login:
       type: object
       properties:
@@ -1730,23 +1723,20 @@ components:
               properties:
                 id:
                   type: integer
-                email:
-                  type: string
                 cohortId:
                   type: integer
                 role:
                   type: string
-                profile:
-                  type: object
-                  properties:
-                    firstName:
-                      type: string
-                    lastName:
-                      type: string
-                    bio:
-                      type: string
-                    githubUrl:
-                      type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                biography:
+                  type: string
+                githubUrl:
+                  type: string
 
     AllNotes:
       type: object
@@ -1754,9 +1744,12 @@ components:
         status:
           type: string
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
+          type: object
+          properties:
+            notes:
+              type: array
+              items:
+                $ref: '#/components/schemas/Note'
 
     Note:
       type: object
@@ -1769,6 +1762,8 @@ components:
           type: integer
         studentId:
           type: integer
+        isEdited:
+          type: boolean
         createdAt:
           type: string
           format: string
@@ -1816,37 +1811,32 @@ components:
           type: string
         data:
           properties:
-            id:
-              type: integer
-            cohortId:
-              type: integer
-            date:
-              type: string
-            user:
-              type: object
+            log:
               properties:
                 id:
                   type: integer
-                profile:
+                cohortId:
+                  type: integer
+                date:
+                  type: string
+                author:
                   type: object
                   properties:
+                    id:
+                      type: integer
                     firstName:
                       type: string
                     lastName:
                       type: string
-                    bio:
-                      type: string
-                    githubUrl:
-                      type: string
-            lines:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  content:
-                    type: string
+                lines:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      content:
+                        type: string
 
     AllExercises:
       type: object
