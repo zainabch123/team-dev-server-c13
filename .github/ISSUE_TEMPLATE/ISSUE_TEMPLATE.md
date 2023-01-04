@@ -1,11 +1,21 @@
 ---
 name: Issue Template
-about: Use this template for new devlopment tasks
-title: Task Desciption Here
+about: Use this template for new development tasks
+title: Task Description Here
 labels: ''
 assignees: ''
-
 ---
+
+## Dependencies
+[Use GitHub issue `#number` references for the following dependencies]
+- Epic: [add the epic issue number that this issue is linked to]
+- Related to: [optional - add any relevant issues that this issue is related to]
+- Depends on: [optional - add any relevant issues that this ticket relies on being completed first]
+
+> **Example:**\
+> Epic: #1 \
+> Related to: #3 #5 \
+> Depends on: #2 #7 #12
 
 ## User Story
 [If applicable, add a link to the user story for this task here, if not feel free to delete this section]
