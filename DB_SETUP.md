@@ -6,10 +6,10 @@
 2. When logged in, click the green *Create New Instance* button in the top right
 ![](./assets/db-setup/1.PNG)
 
-3. Enter a name for your new database instance and choose the *Tiny Turtle (Free)* plan
+3. Enter a name for your new database instance and choose the *Tiny Turtle (Free)* plan. **This will be your PRIMARY database**
 ![](./assets/db-setup/2.PNG)
 
-4. Repeat the same steps to create a second database, this time give it the same name but add `-shadow` to the end
+4. Repeat the same steps to create a second database, this time give it the same name but add `-shadow` to the end. **This will be your SHADOW database**
 
 5. In your shadow instance:
     - click the *Browser* menu item on the left side of the screen
