@@ -16,10 +16,6 @@ Once you have complete the above guide, continue to the steps below.
 5. `npx prisma migrate reset` to build the database tables
 6. `npm run dev` to run the app
 
-## Sample Requests
-
-If you use [Insomnia](https://insomnia.rest/), you can import [this request collection .json file](./assets/insomnia_request_collection.json) in the `./assets/` folder to hit the ground running with all of the requests ready to test.
-
 ## API Spec
 
 [https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
