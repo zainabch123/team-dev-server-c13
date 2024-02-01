@@ -10,7 +10,7 @@ Once you have complete the above guide, continue to the steps below.
 
 1. Copy `.env.example` and name it `.env` (NOTE: Make sure to copy the file, don't remove the original)
 2. Copy the URL of your **PRIMARY** database instance (see image below on how to get this) and place it into the `.env` file's `DATABASE_URL` variable, keeping `?schema=prisma` on the end. E.g. `DATABASE_URL="postgres://uy:ay@ka.db.elephantsql.com/ufy?schema=prisma"`
-![](./assets/db-setup/4.PNG)
+   ![](./assets/db-setup/4.PNG)
 3. Do the same thing for your **SHADOW** database, placing its URL into the `SHADOW_DATABASE_URL` variable, keeping `?schema=shadow` on the end. E.g. `SHADOW_DATABASE_URL="postgres://jk:la@ka.db.elephantsql.com/irk?schema=shadow"`
 4. `npm ci` to install dependencies
 5. `npx prisma migrate reset` to build the database tables and insert some seed data (as defined in [./prisma/seed.js](./prisma/seed.js))
@@ -18,18 +18,20 @@ Once you have complete the above guide, continue to the steps below.
 
 ## API Spec
 
-**INSERT API SPEC LINK HERE**
+[TODO]: <Deploy and update the link below>
+[Deployed API Spec](https://UPDATEME)
 
-### Updating the API spec
-1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
-2. rebuild the html file that represents the user-facing view
+The API Spec is hosted by the server itself (i.e. this project), and the view/page is generated automatically by the SwaggerUI libraryi.
 
-```sh
-# install the redoc-cli utility library first
-$ npm install @redocly/cli -g
+To view it locally, you can just go to: [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
 
-$ # then, build the html file
-$ npx @redocly/cli build-docs docs/openapi.yml -o ./docs/index.html
-```
+Whenever you make any change to the API (e.g. adding a new route, changing the payload for an existing route, adding a new error), you must update the API Spec accordingly. To do this, you just need to update the `openapi.yaml` file -- guidance on the basic structure of the `openapi.yaml` file can be found [here](https://swagger.io/docs/specification/about/).
 
-3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
+- **You should always verify these changes locally before committing your work.**
+- If your server is already running when you changed the `openapi.yaml` file, you will need to stop and restart your server.
+- Once verified, stage and commit the changes on the same branch where you changed the behaviour of the API.
+
+## DATABASE ERD
+
+[TODO]: <Update this with your ERD>
+TODO
