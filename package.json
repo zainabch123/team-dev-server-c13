@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "db-reset": "prisma migrate reset"
+    "migrate": "prisma migrate deploy",
+    "db-reset": "prisma migrate reset --force --skip-seed"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
