@@ -171,4 +171,27 @@ export default class User {
     return foundUsers.map((user) => User.fromDb(user))
   }
 
+  static async updateUser(id, updateData) {
+    const { firstName, lastName, biography, githubUrl, cohortId } = updateData
+
+    console.log('Update data from domain', cohortId)
+
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        profile: {
+          create: {
+            firstName,
+            lastName,
+            biography,
+            githubUrl
+          }
+        }
+      }
+    })
+
+    return updatedUser
+    }
   }

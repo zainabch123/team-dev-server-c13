@@ -97,19 +97,19 @@ export const updateById = async (req, res) => {
       console.log('Updated User', updatedUser)
     }
 
-    if (req.user.role === 'TEACHER') {
-      if (!cohortId) {
-        return sendDataResponse(res, 400, {
-          error: 'Cohort ID is required'
-        })
-      }
+    // if (req.user.role === 'TEACHER') {
+    //   if (!cohortId) {
+    //     return sendDataResponse(res, 400, {
+    //       error: 'Cohort ID is required'
+    //     })
+    //   }
 
-      const updateData = { cohortId }
-      const updatedUser = await User.updateUser(id, updateData)
-      // return sendDataResponse(res, 200, updatedUser)
+    //   const updateData = { cohortId }
+    //   const updatedUser = await User.updateUser(id, updateData)
+    //   // return sendDataResponse(res, 200, updatedUser)
 
-      console.log('Teacher update Data', updateData)
-    }
+    //   console.log('Teacher update Data', updateData)
+    // }
 
     // return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
   } catch (err) {
