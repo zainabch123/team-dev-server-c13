@@ -172,26 +172,35 @@ export default class User {
   }
 
   static async updateUser(id, updateData) {
-    const { firstName, lastName, biography, githubUrl, cohortId } = updateData
+    const { firstName, lastName, bio, githubUrl, cohortId } = updateData
 
-    console.log('Update data from domain', cohortId)
+    console.log('Update data from domain', updateData)
 
     const updatedUser = await dbClient.user.update({
-      where: {
-        id: id
-      },
-      data: {
-        profile: {
-          create: {
-            firstName,
-            lastName,
-            biography,
-            githubUrl
-          }
-        }
-      }
+      where: { id: id },
+      data: { cohortId },
+      include: { profile: true }
     })
 
-    return updatedUser
+    const profileData = { firstName, lastName, bio, githubUrl }
+
+    if (updatedUser.profile) {
+      await dbClient.profile.update({
+        where: { userId: id },
+        data: profileData
+      })
+    } else {
+      await dbClient.profile.create({
+        data: {
+          userId: id,
+          ...profileData
+        }
+      })
     }
+
+    return dbClient.user.findUnique({
+      where: { id: id },
+      include: { profile: true }
+    })
   }
+}

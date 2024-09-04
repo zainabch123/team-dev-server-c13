@@ -93,8 +93,7 @@ export const updateById = async (req, res) => {
         ...(cohortId && {cohortId})
       }
        const updatedUser = await User.updateUser(id, updateData)
-      // return sendDataResponse(res, 200, updatedUser)
-      console.log('Updated User', updatedUser)
+      return sendDataResponse(res, 200, updatedUser)
     }
 
     // if (req.user.role === 'TEACHER') {
