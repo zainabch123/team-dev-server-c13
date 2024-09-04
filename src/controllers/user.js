@@ -79,7 +79,39 @@ export const updateById = async (req, res) => {
         .json({ error: 'Unauthroized Action.' })
     }
 
-  
+    if (req.user.id === id) {
+      if (!firstName || !lastName) {
+        return sendDataResponse(res, 400, {
+          error: 'First name and Last name is required'
+        })
+      }
+      const updateData = {
+        firstName,
+        lastName,
+        ...(bio && { bio }),
+        ...(githubUrl && { githubUrl }),
+        ...(cohortId && {cohortId})
+      }
+       const updatedUser = await User.updateUser(id, updateData)
+      // return sendDataResponse(res, 200, updatedUser)
+      console.log('Updated User', updatedUser)
+    }
+
+    if (req.user.role === 'TEACHER') {
+      if (!cohortId) {
+        return sendDataResponse(res, 400, {
+          error: 'Cohort ID is required'
+        })
+      }
+
+      const updateData = { cohortId }
+      const updatedUser = await User.updateUser(id, updateData)
+      // return sendDataResponse(res, 200, updatedUser)
+
+      console.log('Teacher update Data', updateData)
+    }
+
+    // return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
   } catch (err) {
     console.log('Error', err)
   }
