@@ -58,7 +58,7 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const { firstName, lastName, bio, githubUrl, cohortId } = req.body
+  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } = req.body
 
   try {
     // Check user you want to update exists:
@@ -88,7 +88,8 @@ export const updateById = async (req, res) => {
         firstName,
         lastName,
         ...(bio && { bio }),
-        ...(githubUrl && { githubUrl })
+        ...(githubUrl && { githubUrl }),
+        ...(profilePicture && { profilePicture })
       }
       const updatedUser = await User.updateUser(id, updateData)
       delete updatedUser.password
