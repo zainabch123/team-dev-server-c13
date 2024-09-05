@@ -28,8 +28,6 @@ export async function validateAuthentication(req, res, next) {
 
   const [type, token] = header.split(' ')
 
-  console.log("token", token);
-
   const isTypeValid = validateTokenType(type)
   if (!isTypeValid) {
     return sendDataResponse(res, 401, {
