@@ -91,6 +91,7 @@ export const updateById = async (req, res) => {
         ...(githubUrl && { githubUrl })
       }
       const updatedUser = await User.updateUser(id, updateData)
+      delete updatedUser.password
       return sendDataResponse(res, 200, updatedUser)
     }
 
@@ -103,6 +104,7 @@ export const updateById = async (req, res) => {
 
       const updateData = { cohortId }
       const updatedUser = await User.updateUser(id, updateData)
+      delete updatedUser.password
       return sendDataResponse(res, 200, updatedUser)
     }
 
