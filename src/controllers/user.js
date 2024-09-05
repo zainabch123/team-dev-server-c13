@@ -58,7 +58,8 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } = req.body
+  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } =
+    req.body
 
   try {
     // Check user you want to update exists:
@@ -93,7 +94,7 @@ export const updateById = async (req, res) => {
       }
       const updatedUser = await User.updateUser(id, updateData)
       delete updatedUser.password
-      return sendDataResponse(res, 200, updatedUser)
+      return sendDataResponse(res, 201, updatedUser)
     }
 
     if (req.user.role === 'TEACHER') {
@@ -106,10 +107,8 @@ export const updateById = async (req, res) => {
       const updateData = { cohortId }
       const updatedUser = await User.updateUser(id, updateData)
       delete updatedUser.password
-      return sendDataResponse(res, 200, updatedUser)
+      return sendDataResponse(res, 201, updatedUser)
     }
-
-    return sendDataResponse(res, 200, { user: { cohort_id: cohortId } })
   } catch (e) {
     return sendMessageResponse(res, 500, 'Server Error')
   }
