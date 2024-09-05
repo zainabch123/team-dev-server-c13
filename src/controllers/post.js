@@ -7,33 +7,32 @@ export const create = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
 
-  const auth = req.headers.authorization;
+  const auth = req.headers.authorization
 
   if (!auth) {
-    return res.status(401).json({ error: "Not authorised" });
+    return res.status(401).json({ error: 'Not authorised' })
   }
 
-  const token = auth.split(" ")[1];
+  const token = auth.split(' ')[1]
 
   if (!token) {
-    return res.status(401).json({ error: "Not authorised" });
+    return res.status(401).json({ error: 'Not authorised' })
   }
 
   try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+    const userId = decodedToken.id
 
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  const userId = decodedToken.id;
+    const post = await prisma.post.create({
+      data: {
+        content: content,
+        userId: userId
+      }
+    })
 
-  const post = await prisma.post.create({
-    data: {
-      content: content,
-      userId: userId,
-    }
-  })
-
-  return sendDataResponse(res, 201, { post: { id: post.id, content } });
-} catch (e) {
-    return res.status(401).json({ error: "Not authorised" });
+    return sendDataResponse(res, 201, { post: { id: post.id, content } })
+  } catch (e) {
+    return res.status(401).json({ error: 'Not authorised' })
   }
 }
 
