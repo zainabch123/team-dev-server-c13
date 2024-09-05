@@ -170,4 +170,38 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async updateUser(id, updateData) {
+    const { firstName, lastName, bio, githubUrl, profilePicture, cohortId } =
+      updateData
+
+    // Function to update profile id
+    const updatedUser = await dbClient.user.update({
+      where: { id: id },
+      data: { cohortId },
+      include: { profile: true }
+    })
+
+    const profileData = { firstName, lastName, bio, githubUrl, profilePicture }
+
+    // Function to update profile or create profile if it does not exist
+    if (updatedUser.profile) {
+      await dbClient.profile.update({
+        where: { userId: id },
+        data: profileData
+      })
+    } else {
+      await dbClient.profile.create({
+        data: {
+          userId: id,
+          ...profileData
+        }
+      })
+    }
+
+    return dbClient.user.findUnique({
+      where: { id: id },
+      include: { profile: true }
+    })
+  }
 }
