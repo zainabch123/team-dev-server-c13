@@ -84,17 +84,15 @@ export const updateById = async (req, res) => {
           error: 'First name and Last name is required'
         })
       }
-      // inject fields if not null in payload
-      const updateData = {
-        firstName,
-        lastName,
-        ...(bio && { bio }),
-        ...(githubUrl && { githubUrl }),
-        ...(profilePicture && { profilePicture })
-      }
-      const updatedUser = await User.updateUser(id, updateData)
-      delete updatedUser.password
-      return sendDataResponse(res, 201, updatedUser)
+    }
+
+    // inject fields if not null in payload
+    const updateData = {
+      firstName,
+      lastName,
+      ...(bio && { bio }),
+      ...(githubUrl && { githubUrl }),
+      ...(profilePicture && { profilePicture })
     }
 
     if (req.user.role === 'TEACHER') {
@@ -104,11 +102,11 @@ export const updateById = async (req, res) => {
         })
       }
 
-      const updateData = { cohortId }
-      const updatedUser = await User.updateUser(id, updateData)
-      delete updatedUser.password
-      return sendDataResponse(res, 201, updatedUser)
+      updateData.cohortId = cohortId
     }
+    const updatedUser = await User.updateUser(id, updateData)
+    delete updatedUser.password
+    return sendDataResponse(res, 201, updatedUser)
   } catch (e) {
     return sendMessageResponse(res, 500, 'Server Error')
   }
