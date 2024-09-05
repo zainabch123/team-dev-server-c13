@@ -2,6 +2,7 @@ import { sendDataResponse } from '../utils/responses.js'
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 const prisma = new PrismaClient()
+// ignore
 
 export const create = async (req, res) => {
   const { content } = req.body
