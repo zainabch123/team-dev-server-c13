@@ -58,25 +58,23 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const {
-    firstName,
-    lastName,
-    biography: bio,
-    githubUrl,
-    cohort_id: cohortId
-  } = req.body
+  const { firstName, lastName, bio, githubUrl, cohortId } = req.body
 
   try {
+    // Check user you want to update exists:
     const foundUser = await User.findById(id)
 
     if (!foundUser) {
       return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
-    if (req.user.id !== id && req.user.role !== 'TEACHER') {
+    // Check whether user is authorised
+    const canUpdateProfile = req.user.id === id || req.user.role === 'TEACHER'
+
+    if (canUpdateProfile === false) {
       return res
         .status(403)
-        .json({ error: 'Unauthroized Action.' })
+        .json({ error: 'User not authorized to make this change.' })
     }
 
     if (req.user.id === id) {
@@ -85,13 +83,14 @@ export const updateById = async (req, res) => {
           error: 'First name and Last name is required'
         })
       }
+      // inject fields if not null in payload
       const updateData = {
         firstName,
         lastName,
         ...(bio && { bio }),
         ...(githubUrl && { githubUrl })
       }
-       const updatedUser = await User.updateUser(id, updateData)
+      const updatedUser = await User.updateUser(id, updateData)
       return sendDataResponse(res, 200, updatedUser)
     }
 
@@ -107,8 +106,8 @@ export const updateById = async (req, res) => {
       return sendDataResponse(res, 200, updatedUser)
     }
 
-    return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
-  } catch (err) {
-    console.log('Error', err)
+    return sendDataResponse(res, 200, { user: { cohort_id: cohortId } })
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Server Error')
   }
 }

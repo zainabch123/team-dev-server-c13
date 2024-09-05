@@ -174,8 +174,7 @@ export default class User {
   static async updateUser(id, updateData) {
     const { firstName, lastName, bio, githubUrl, cohortId } = updateData
 
-    console.log('Update data from domain', updateData)
-
+    // Function to update profile id
     const updatedUser = await dbClient.user.update({
       where: { id: id },
       data: { cohortId },
@@ -184,6 +183,7 @@ export default class User {
 
     const profileData = { firstName, lastName, bio, githubUrl }
 
+    // Function to update profile or create profile if it does not exist
     if (updatedUser.profile) {
       await dbClient.profile.update({
         where: { userId: id },
