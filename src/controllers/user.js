@@ -108,6 +108,6 @@ export const updateById = async (req, res) => {
     delete updatedUser.password
     return sendDataResponse(res, 201, updatedUser)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Server Error')
+    console.log('Error', e)
   }
 }
