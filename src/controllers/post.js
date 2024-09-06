@@ -1,32 +1,16 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { PrismaClient } from '@prisma/client'
-import jwt from 'jsonwebtoken'
-const prisma = new PrismaClient()
+import dbClient from '../utils/dbClient.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
+  const userId = req.user.id
 
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
 
-  const auth = req.headers.authorization
-
-  if (!auth) {
-    return res.status(401).json({ error: 'Not authorised' })
-  }
-
-  const token = auth.split(' ')[1]
-
-  if (!token) {
-    return res.status(401).json({ error: 'Not authorised' })
-  }
-
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-    const userId = decodedToken.id
-
-    const post = await prisma.post.create({
+    const post = await dbClient.post.create({
       data: {
         content: content,
         userId: userId
