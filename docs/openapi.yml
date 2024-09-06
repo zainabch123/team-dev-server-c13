@@ -157,8 +157,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedUser'
-        '401':
+                $ref: '#/components/schemas/UpdatedUser'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
           description: fail
           content:
             application/json:
@@ -377,10 +395,6 @@ components:
     UpdateUser:
       type: object
       properties:
-        email:
-          type: string
-        password:
-          type: string
         cohortId:
           type: integer
         role:
@@ -392,6 +406,8 @@ components:
         bio:
           type: string
         githubUrl:
+          type: string
+        profilePicture:
           type: string
 
     Posts:
@@ -436,6 +452,36 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
+    UpdatedUser:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+                id:
+                  type: integer
+                email:
+                  type: string
+                cohortId:
+                  type: integer
+                role:
+                  type: string
+                profile:
+                  properties:
+                    userId:
+                      type: integer
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                    bio:
+                      type: string
+                    githubUrl:
+                      type: string
+                    profilePicture:
+                      type: string
 
     CreatedUser:
       type: object
@@ -463,13 +509,17 @@ components:
                   type: string
                 githubUrl:
                   type: string
-    login:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
+
+ 
+
+      login:
+        login:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
 
     loginRes:
       type: object

@@ -57,11 +57,57 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const id = Number(req.params.id)
+  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } =
+    req.body
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  try {
+    // Check user you want to update exists:
+    const foundUser = await User.findById(id)
+
+    if (!foundUser) {
+      return sendDataResponse(res, 404, { error: 'User not found' })
+    }
+
+    // Check whether user is authorised
+    const canUpdateProfile = req.user.id === id || req.user.role === 'TEACHER'
+
+    if (canUpdateProfile === false) {
+      return res
+        .status(403)
+        .json({ error: 'User not authorized to make this change.' })
+    }
+
+    if (req.user.id === id) {
+      if (!firstName || !lastName) {
+        return sendDataResponse(res, 400, {
+          error: 'First name and Last name is required'
+        })
+      }
+    }
+
+    // inject fields if not null in payload
+    const updateData = {
+      firstName,
+      lastName,
+      ...(bio && { bio }),
+      ...(githubUrl && { githubUrl }),
+      ...(profilePicture && { profilePicture })
+    }
+
+    if (req.user.role === 'TEACHER') {
+      if (!cohortId) {
+        return sendDataResponse(res, 400, {
+          error: 'Cohort ID is required'
+        })
+      }
+
+      updateData.cohortId = cohortId
+    }
+    const updatedUser = await User.updateUser(id, updateData)
+    delete updatedUser.password
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Server Error')
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
