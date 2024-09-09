@@ -127,7 +127,35 @@ export default class User {
   }
 
   static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
+    return User._findMany('name', firstName)
+  }
+
+  static async findManyByName(searchTerm) {
+    return dbClient.user.findMany({
+      where: {
+        OR: [
+          {
+            profile: {
+              firstName: {
+                contains: searchTerm,
+                mode: 'insensitive' // Optional: Makes the search case-insensitive
+              }
+            }
+          },
+          {
+            profile: {
+              lastName: {
+                contains: searchTerm,
+                mode: 'insensitive'
+              }
+            }
+          }
+        ]
+      },
+      include: {
+        profile: true
+      }
+    })
   }
 
   static async findAll() {

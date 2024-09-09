@@ -37,12 +37,28 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { search } = req.query
 
-  let foundUsers
+  if (!search || !search.trim()) {
+    return sendDataResponse(res, 400, { result: 'No name(s) provided' })
+  }
 
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
+  const formattedSearch = search.trim().split(/\s+/)
+
+  let foundUsers = []
+
+  if (formattedSearch.length === 1) {
+    foundUsers = await User.findManyByName(formattedSearch[0])
+  } else if (formattedSearch.length === 2) {
+    foundUsers = await User.findManyByName(formattedSearch[0])
+
+    const secondNameSearch = await User.findManyByName(formattedSearch[1])
+    secondNameSearch.forEach((user) => {
+      const exists = foundUsers.some((foundUser) => foundUser.id === user.id)
+      if (!exists) {
+        foundUsers.push(user)
+      }
+    })
   } else {
     foundUsers = await User.findAll()
   }
