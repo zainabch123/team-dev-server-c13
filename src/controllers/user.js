@@ -4,7 +4,6 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
 
-  console.log("user to create", userToCreate)
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
 
