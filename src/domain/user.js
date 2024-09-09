@@ -212,9 +212,11 @@ export default class User {
       })
     }
 
-    return dbClient.user.findUnique({
+    const foundUser = await dbClient.user.findUnique({
       where: { id: id },
       include: { profile: true }
     })
+
+    return User.fromDb(foundUser)
   }
 }
