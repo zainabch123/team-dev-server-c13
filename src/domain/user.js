@@ -19,6 +19,7 @@ export default class User {
       user.email,
       user.profile?.bio,
       user.profile?.githubUrl,
+      user.profile?.profilePicture,
       user.password,
       user.role
     )
@@ -26,7 +27,15 @@ export default class User {
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
+    const {
+      firstName,
+      lastName,
+      email,
+      biography,
+      githubUrl,
+      password,
+      profilePicture
+    } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
@@ -38,6 +47,7 @@ export default class User {
       email,
       biography,
       githubUrl,
+      profilePicture,
       passwordHash
     )
   }
@@ -50,6 +60,7 @@ export default class User {
     email,
     bio,
     githubUrl,
+    profilePicture,
     passwordHash = null,
     role = 'STUDENT'
   ) {
@@ -60,6 +71,7 @@ export default class User {
     this.email = email
     this.bio = bio
     this.githubUrl = githubUrl
+    this.profilePicture = profilePicture
     this.passwordHash = passwordHash
     this.role = role
   }
@@ -74,7 +86,8 @@ export default class User {
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        profilePicture: this.profilePicture
       }
     }
   }
@@ -199,9 +212,11 @@ export default class User {
       })
     }
 
-    return dbClient.user.findUnique({
+    const foundUser = await dbClient.user.findUnique({
       where: { id: id },
       include: { profile: true }
     })
+
+    return User.fromDb(foundUser)
   }
 }
