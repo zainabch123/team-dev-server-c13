@@ -130,10 +130,10 @@ export default class User {
     return User._findMany('name', firstName)
   }
 
-  static async findManyByName(searchTerm) {
+  static async findManyByName(searchTerms) {
     return dbClient.user.findMany({
       where: {
-        OR: [
+        OR: searchTerms.map((searchTerm) => [
           {
             profile: {
               firstName: {
@@ -150,7 +150,7 @@ export default class User {
               }
             }
           }
-        ]
+        ])
       },
       include: {
         profile: true

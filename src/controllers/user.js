@@ -40,28 +40,14 @@ export const getAll = async (req, res) => {
   const { search } = req.query
 
   if (!search || !search.trim()) {
-    return sendDataResponse(res, 400, { result: 'No name(s) provided' })
+    const allUsers = await User.findAll()
+    return sendDataResponse(res, 200, { users: allUsers })
   }
 
+  // remove any spaces around query, then split by one or more empty spaces
   const formattedSearch = search.trim().split(/\s+/)
 
-  let foundUsers = []
-
-  if (formattedSearch.length === 1) {
-    foundUsers = await User.findManyByName(formattedSearch[0])
-  } else if (formattedSearch.length === 2) {
-    foundUsers = await User.findManyByName(formattedSearch[0])
-
-    const secondNameSearch = await User.findManyByName(formattedSearch[1])
-    secondNameSearch.forEach((user) => {
-      const exists = foundUsers.some((foundUser) => foundUser.id === user.id)
-      if (!exists) {
-        foundUsers.push(user)
-      }
-    })
-  } else {
-    foundUsers = await User.findAll()
-  }
+  const foundUsers = await User.findManyByName(formattedSearch)
 
   const formattedUsers = foundUsers.map((user) => {
     return {
