@@ -60,8 +60,18 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture, role } =
-    req.body
+  const {
+    firstName,
+    lastName,
+    bio,
+    githubUrl,
+    cohortId,
+    profilePicture,
+    role,
+    username,
+    specialism,
+    mobile
+  } = req.body
 
   try {
     // Check user you want to update exists:
@@ -94,7 +104,10 @@ export const updateById = async (req, res) => {
       lastName,
       ...(bio && { bio }),
       ...(githubUrl && { githubUrl }),
-      ...(profilePicture && { profilePicture })
+      ...(profilePicture && { profilePicture }),
+      ...(username && { username }),
+      ...(specialism && { specialism }),
+      ...(mobile && { mobile })
     }
 
     if (req.user.role === 'TEACHER') {
