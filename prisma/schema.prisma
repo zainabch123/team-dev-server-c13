@@ -11,7 +11,7 @@ datasource db {
 model User {
   id           Int           @id @default(autoincrement())
   email        String        @unique
-  username        String?        @unique
+  username     String?       @unique
   password     String
   cohortId     Int?
   role         Role          @default(STUDENT)
@@ -30,8 +30,8 @@ model Profile {
   bio         String?
   githubUrl   String?
   profilePicture String?
-  specialism String? @default("")
-  mobile String? @default("")
+  specialism  String? @default("")
+  mobile      String? @default("")
   }
 
 model Cohort {
