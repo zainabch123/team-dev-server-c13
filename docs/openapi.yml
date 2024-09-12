@@ -491,9 +491,9 @@ components:
                 specialism:
                   type: string
                 startDate:
-                  type: dateTime
+                  type: number
                 endDate:
-                  type: dateTime
+                  type: number
 
     CreatedUser:
       type: object
