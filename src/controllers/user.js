@@ -75,9 +75,9 @@ export const updateById = async (req, res) => {
 
   try {
     // Check user you want to update exists:
-    const foundUser = await User.findById(id)
+    const foundUserId = await User.findById(id)
 
-    if (!foundUser) {
+    if (!foundUserId) {
       return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
@@ -123,6 +123,12 @@ export const updateById = async (req, res) => {
     delete updatedUser.password
     return sendDataResponse(res, 201, updatedUser)
   } catch (e) {
+    if (e.code === 'P2002') {
+      return sendDataResponse(res, 400, {
+        error: 'A user with this username already exists'
+      })
+    }
+
     return sendMessageResponse(res, 500, 'Server Error')
   }
 }
