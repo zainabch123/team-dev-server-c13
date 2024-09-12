@@ -60,7 +60,7 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } =
+  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture, role } =
     req.body
 
   try {
@@ -98,13 +98,13 @@ export const updateById = async (req, res) => {
     }
 
     if (req.user.role === 'TEACHER') {
-      if (!cohortId) {
-        return sendDataResponse(res, 400, {
-          error: 'Cohort ID is required'
-        })
+      if (cohortId) {
+        updateData.cohortId = cohortId
       }
 
-      updateData.cohortId = cohortId
+      if (role) {
+        updateData.role = role
+      }
     }
     const updatedUser = await User.updateUser(id, updateData)
     delete updatedUser.password

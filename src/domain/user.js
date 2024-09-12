@@ -213,13 +213,20 @@ export default class User {
   }
 
   static async updateUser(id, updateData) {
-    const { firstName, lastName, bio, githubUrl, profilePicture, cohortId } =
-      updateData
+    const {
+      firstName,
+      lastName,
+      bio,
+      githubUrl,
+      profilePicture,
+      cohortId,
+      role
+    } = updateData
 
     // Function to update profile id
     const updatedUser = await dbClient.user.update({
       where: { id: id },
-      data: { cohortId },
+      data: { cohortId, role },
       include: { profile: true }
     })
 
