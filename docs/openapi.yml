@@ -491,9 +491,11 @@ components:
                 specialism:
                   type: string
                 startDate:
-                  type: DateTime
+                  type: string
+                  format: date-time
                 endDate:
-                  type: DateTime
+                  type: string
+                  format: date-time
 
     CreatedUser:
       type: object
