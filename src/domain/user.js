@@ -21,7 +21,12 @@ export default class User {
       user.profile?.githubUrl,
       user.profile?.profilePicture,
       user.password,
-      user.role
+      user.role,
+      user.username,
+      user.profile.mobile,
+      user.profile.specialism,
+      user.cohortId ? user.cohort.startDate : null,
+      user.cohortId ? user.cohort.endDate : null
     )
   }
 
@@ -62,7 +67,12 @@ export default class User {
     githubUrl,
     profilePicture,
     passwordHash = null,
-    role = 'STUDENT'
+    role = 'STUDENT',
+    username,
+    mobile,
+    specialism,
+    startDate,
+    endDate
   ) {
     this.id = id
     this.cohortId = cohortId
@@ -74,6 +84,11 @@ export default class User {
     this.profilePicture = profilePicture
     this.passwordHash = passwordHash
     this.role = role
+    this.username = username
+    this.mobile = mobile
+    this.specialism = specialism
+    this.startDate = cohortId ? startDate : null
+    this.endDate = cohortId ? endDate : null
   }
 
   toJSON() {
@@ -87,7 +102,12 @@ export default class User {
         email: this.email,
         biography: this.bio,
         githubUrl: this.githubUrl,
-        profilePicture: this.profilePicture
+        profilePicture: this.profilePicture,
+        username: this.username,
+        mobile: this.mobile,
+        specialism: this.specialism,
+        startDate: this.startDate,
+        endDate: this.endDate
       }
     }
   }
@@ -124,7 +144,8 @@ export default class User {
     const createdUser = await dbClient.user.create({
       data,
       include: {
-        profile: true
+        profile: true,
+        cohort: true
       }
     })
 
@@ -181,7 +202,8 @@ export default class User {
         [key]: value
       },
       include: {
-        profile: true
+        profile: true,
+        cohort: true
       }
     })
 
@@ -213,17 +235,35 @@ export default class User {
   }
 
   static async updateUser(id, updateData) {
-    const { firstName, lastName, bio, githubUrl, profilePicture, cohortId } =
-      updateData
+    const {
+      firstName,
+      lastName,
+      bio,
+      githubUrl,
+      profilePicture,
+      cohortId,
+      role,
+      username,
+      specialism,
+      mobile
+    } = updateData
 
     // Function to update profile id
     const updatedUser = await dbClient.user.update({
       where: { id: id },
-      data: { cohortId },
-      include: { profile: true }
+      data: { cohortId, role, username },
+      include: { profile: true, cohort: true }
     })
 
-    const profileData = { firstName, lastName, bio, githubUrl, profilePicture }
+    const profileData = {
+      firstName,
+      lastName,
+      bio,
+      githubUrl,
+      profilePicture,
+      specialism,
+      mobile
+    }
 
     // Function to update profile or create profile if it does not exist
     if (updatedUser.profile) {
@@ -242,7 +282,7 @@ export default class User {
 
     const foundUser = await dbClient.user.findUnique({
       where: { id: id },
-      include: { profile: true }
+      include: { profile: true, cohort: true }
     })
 
     return User.fromDb(foundUser)

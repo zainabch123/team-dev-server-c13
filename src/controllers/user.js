@@ -60,14 +60,24 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
-  const { firstName, lastName, bio, githubUrl, cohortId, profilePicture } =
-    req.body
+  const {
+    firstName,
+    lastName,
+    bio,
+    githubUrl,
+    cohortId,
+    profilePicture,
+    role,
+    username,
+    specialism,
+    mobile
+  } = req.body
 
   try {
     // Check user you want to update exists:
-    const foundUser = await User.findById(id)
+    const foundUserId = await User.findById(id)
 
-    if (!foundUser) {
+    if (!foundUserId) {
       return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
@@ -94,22 +104,31 @@ export const updateById = async (req, res) => {
       lastName,
       ...(bio && { bio }),
       ...(githubUrl && { githubUrl }),
-      ...(profilePicture && { profilePicture })
+      ...(profilePicture && { profilePicture }),
+      ...(username && { username }),
+      ...(specialism && { specialism }),
+      ...(mobile && { mobile })
     }
 
     if (req.user.role === 'TEACHER') {
-      if (!cohortId) {
-        return sendDataResponse(res, 400, {
-          error: 'Cohort ID is required'
-        })
+      if (cohortId) {
+        updateData.cohortId = cohortId
       }
 
-      updateData.cohortId = cohortId
+      if (role) {
+        updateData.role = role
+      }
     }
     const updatedUser = await User.updateUser(id, updateData)
     delete updatedUser.password
     return sendDataResponse(res, 201, updatedUser)
   } catch (e) {
+    if (e.code === 'P2002') {
+      return sendDataResponse(res, 400, {
+        error: 'A user with this username already exists'
+      })
+    }
+
     return sendMessageResponse(res, 500, 'Server Error')
   }
 }
