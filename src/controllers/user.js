@@ -1,5 +1,5 @@
-import User from '../domain/user'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses'
+import User from '../domain/user.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
