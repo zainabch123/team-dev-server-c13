@@ -127,7 +127,7 @@ export const updateById = async (req, res) => {
       return sendDataResponse(res, 400, {
         error: 'A user with this username already exists'
       })
-    }
+    
 
     return sendMessageResponse(res, 500, 'Server Error')
   }
