@@ -42,7 +42,7 @@ export const getAll = async (req, res) => {
                 lastName: true,
                 bio: true,
                 githubUrl: true,
-                profileimageUrl: true
+                profilePicture: true
               }
             }
           }
