@@ -36,11 +36,15 @@ export const getAll = async (req, res) => {
             id: true,
             cohortId: true,
             role: true,
-            firstName: true,
-            lastName: true,
-            bio: true,
-            githubUrl: true,
-            profileimageUrl: true
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                bio: true,
+                githubUrl: true,
+                profileimageUrl: true
+              }
+            }
           }
         }
       }
