@@ -17,7 +17,7 @@ export const create = async (req, res) => {
       }
     })
 
-    return sendDataResponse(res, 201, { post: { id: post.id, content } })
+    return sendDataResponse(res, 201, { posts: { id: post.id, content } })
   } catch (e) {
     return res.status(401).json({ error: 'Not authorised' })
   }
@@ -36,16 +36,20 @@ export const getAll = async (req, res) => {
             id: true,
             cohortId: true,
             role: true,
-            firstName: true,
-            lastName: true,
-            bio: true,
-            githubUrl: true,
-            profileimageUrl: true
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                bio: true,
+                githubUrl: true,
+                profilePicture: true
+              }
+            }
           }
         }
       }
     })
-    return sendDataResponse(res, 200, { posts })
+    return sendDataResponse(res, 200, { posts: posts })
   } catch (e) {
     return sendMessageResponse(res, 500, 'Unable to fetch')
   }
