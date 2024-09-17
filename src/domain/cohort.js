@@ -15,11 +15,11 @@ export async function createCohort() {
 export async function getCohort(cohortId) {
   const cohort = await dbClient.cohort.findUnique({
     where: { id: cohortId },
-    select: {
-      cohortName: true,
-      startDate: true,
-      endDate: true
-    },
+    // select: {
+    //   cohortName: true,
+    //   startDate: true,
+    //   endDate: true
+    // },
     include: {
       users: true
     }

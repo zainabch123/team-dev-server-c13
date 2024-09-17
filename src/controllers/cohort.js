@@ -13,7 +13,6 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   const cohortId = parseInt(req.params.id)
-  console.log(cohortId)
 
   if (isNaN(cohortId)) {
     return sendMessageResponse(res, 400, 'Invalid cohort ID')
