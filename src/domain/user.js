@@ -36,7 +36,7 @@ export default class User {
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
       password,
       profilePicture
@@ -50,7 +50,7 @@ export default class User {
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
       profilePicture,
       passwordHash
@@ -100,7 +100,7 @@ export default class User {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        biography: this.bio,
+        bio: this.bio,
         githubUrl: this.githubUrl,
         profilePicture: this.profilePicture,
         username: this.username,
