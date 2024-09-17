@@ -478,7 +478,7 @@ components:
                   type: string
                 email:
                   type: string
-                biography:
+                bio:
                   type: string
                 githubUrl:
                   type: string
