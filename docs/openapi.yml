@@ -309,6 +309,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /cohorts/{id}:
+    get:
+      tags:
+        - cohort
+      summary: Get cohort
+      description: get all information on cohort
+      operationId: getCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the cohort that needs to be fetched.'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohort'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -411,7 +446,7 @@ components:
           type: string
         username:
           type: string
-        mobile: 
+        mobile:
           type: string
         specialism:
           type: string
@@ -466,6 +501,7 @@ components:
           example: success
         data:
           properties:
+
                 id:
                   type: integer
                 cohortId:
@@ -523,8 +559,6 @@ components:
                   type: string
                 githubUrl:
                   type: string
-
- 
 
       login:
         login:
