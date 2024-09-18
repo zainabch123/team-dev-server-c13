@@ -54,6 +54,7 @@ model Grade {
   userId       Int
   user         User      @relation(fields: [userId], references: [id])
   grade        Int
+  @@unique([exerciseId, userId])
   completedAt  DateTime  @default(now())
 }
 
