@@ -68,8 +68,8 @@ model Profile {
   bio         String?
   githubUrl   String?
   profilePicture String?
-  specialism  String? @default("")
-  mobile      String? @default("")
+  specialism  String? 
+  mobile      String? 
   }
 
 model Cohort {
