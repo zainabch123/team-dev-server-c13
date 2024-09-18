@@ -19,6 +19,42 @@ model User {
   deliveryLogs DeliveryLog[]
   posts        Post[]
   profile      Profile?
+  grades       Grade []
+}
+
+model Exercise {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  unitId      Int
+  unit        Unit       @relation(fields: [unitId], references: [id])
+  grades      Grade[]
+}
+
+model Unit {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  moduleId    Int
+  module      Module     @relation(fields: [moduleId], references: [id])
+  exercises   Exercise[]
+}
+
+model Module {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  units       Unit[]
+}
+
+model Grade {
+  id           Int       @id @default(autoincrement())
+  exerciseId   Int
+  exercise     Exercise  @relation(fields: [exerciseId], references: [id])
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
+  grade        Int
+  completedAt  DateTime  @default(now())
 }
 
 model Profile {

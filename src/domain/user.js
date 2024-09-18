@@ -287,4 +287,43 @@ export default class User {
 
     return User.fromDb(foundUser)
   }
+
+  static async findUserWithGradesById(id) {
+    const userWithGrades = await dbClient.user.findUnique({
+      where: { id: id },
+      include: {
+        profile: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        },
+        cohort: true,
+        grades: {
+          include: {
+            exercise: true
+          }
+        }
+      }
+    })
+
+    if (!userWithGrades) {
+      return null
+    }
+
+    const modules = await dbClient.module.findMany({
+      include: {
+        units: {
+          include: {
+            exercises: true
+          }
+        }
+      }
+    })
+
+    return {
+      user: userWithGrades,
+      modules: modules
+    }
+  }
 }

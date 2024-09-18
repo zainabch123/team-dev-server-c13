@@ -35,6 +35,63 @@ export const getById = async (req, res) => {
   }
 }
 
+export const getCompletionById = async (req, res) => {
+  const id = parseInt(req.params.id)
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid user ID' })
+  }
+
+  try {
+    const userWithGrades = await User.findUserWithGradesById(id)
+
+    if (!userWithGrades) {
+      return res.status(404).send('User not found')
+    }
+
+    const user = userWithGrades.user
+    const grades = userWithGrades.user.grades
+    const modules = userWithGrades.modules
+
+    const formattedGrades = modules.map((module) => {
+      return {
+        moduleId: module.id,
+        moduleName: module.name,
+        units: module.units.map((unit) => {
+          return {
+            unitId: unit.id,
+            unitName: unit.name,
+            exercises: unit.exercises.map((exercise) => {
+              const userGrade = grades.find(
+                (grade) => grade.exerciseId === exercise.id
+              )
+              return {
+                exerciseId: exercise.id,
+                exerciseName: exercise.name,
+                grade: userGrade ? userGrade.grade : null,
+                completedAt: userGrade ? userGrade.completedAt : null
+              }
+            })
+          }
+        })
+      }
+    })
+
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.profile.firstName,
+        lastName: user.profile.lastName,
+        cohortName: user.cohort.cohortName
+      },
+      grades: formattedGrades
+    })
+  } catch (error) {
+    console.error('Error:', error)
+    return res.status(500).send('Error retrieving user grades')
+  }
+}
+
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
   const { search } = req.query
