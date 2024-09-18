@@ -23,8 +23,8 @@ export default class User {
       user.password,
       user.role,
       user.username,
-      user.profile.mobile,
-      user.profile.specialism,
+      user.profile?.mobile,
+      user.profile?.specialism,
       user.cohortId ? user.cohort.startDate : null,
       user.cohortId ? user.cohort.endDate : null
     )
@@ -95,7 +95,7 @@ export default class User {
     return {
       user: {
         id: this.id,
-        cohort_id: this.cohortId,
+        cohortId: this.cohortId,
         role: this.role,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -244,14 +244,14 @@ export default class User {
       cohortId,
       role,
       username,
-      specialism,
-      mobile
+      mobile,
+      specialism
     } = updateData
 
     // Function to update profile id
     const updatedUser = await dbClient.user.update({
       where: { id: id },
-      data: { cohortId, role, username },
+      data: { cohortId: cohortId, role: role, username: username },
       include: { profile: true, cohort: true }
     })
 

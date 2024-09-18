@@ -69,8 +69,8 @@ export const updateById = async (req, res) => {
     profilePicture,
     role,
     username,
-    specialism,
-    mobile
+    mobile,
+    specialism
   } = req.body
 
   try {
