@@ -102,12 +102,12 @@ export const updateById = async (req, res) => {
     const updateData = {
       firstName,
       lastName,
-      ...(bio && { bio }),
-      ...(githubUrl && { githubUrl }),
-      ...(profilePicture && { profilePicture }),
-      ...(username && { username }),
-      ...(specialism && { specialism }),
-      ...(mobile && { mobile })
+      bio: bio === '' ? null : bio,
+      githubUrl: githubUrl === '' ? null : githubUrl,
+      profilePicture: profilePicture === '' ? null : profilePicture,
+      username: username === '' ? null : username,
+      specialism: specialism === '' ? null : specialism,
+      mobile: mobile === '' ? null : mobile
     }
 
     if (req.user.role === 'TEACHER') {
