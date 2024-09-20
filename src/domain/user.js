@@ -25,8 +25,8 @@ export default class User {
       user.username,
       user.profile?.mobile,
       user.profile?.specialism,
-      user.cohortId ? user.cohort.startDate : null,
-      user.cohortId ? user.cohort.endDate : null
+      user.cohort ? user.cohort.startDate : null,
+      user.cohort ? user.cohort.endDate : null
     )
   }
 
