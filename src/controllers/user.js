@@ -169,7 +169,7 @@ export const updateById = async (req, res) => {
 
     if (req.user.role === 'TEACHER') {
       if (cohortId) {
-        updateData.cohortId = cohortId
+        updateData.cohortId = Number(cohortId)
       }
 
       if (role) {
