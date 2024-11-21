@@ -1,39 +1,11 @@
 # Team Simulation - Server
+Developed as part of a team simulation, this social-media-style app enables users to interact with teachers and students within their cohort. Key areas I contributed to include:
 
-## Setting up
+1. Updated the app's context to ensure essential user data is accessible throughout the UI, even after page refreshes.
+2. Implemented user registration, allowing new users to register and create their initial profiles.
+3. Developed functionality for users to view their own profiles and the profiles of others.
+4. Enabled students to edit their profiles, while teachers can edit any profile and manage user permissions using role-based access control.
+5. Updated the API using .yaml whenver changes were made.
 
-### Pre-requisite
+An integral aspect of this team development simulation was the use of Agile methodologies. This included regular stand-ups, retrospectives, and reporting to a Scrum Master. The process involved breaking down client specifications from Figma into actionable tasks, which were organized into tickets for the team to prioritize and plan effectively. It was a highly valuable experience in collaboration and real-world coding practices.
 
-[Follow this guide to create your databases](./DB_SETUP.md)
-
-Once you have complete the above guide, continue to the steps below.
-
-1. Copy `.env.example` and name it `.env` (NOTE: Make sure to copy the file, don't remove the original)
-2. Copy the URL of your **PRIMARY** database instance (see image below on how to get this) and place it into the `.env` file's `DATABASE_URL` variable, keeping `?schema=prisma` on the end. E.g. `DATABASE_URL="postgres://uy:ay@ka.db.elephantsql.com/ufy?schema=prisma"`
-   ![](./assets/db-setup/4.PNG)
-3. Do the same thing for your **SHADOW** database, placing its URL into the `SHADOW_DATABASE_URL` variable, keeping `?schema=shadow` on the end. E.g. `SHADOW_DATABASE_URL="postgres://jk:la@ka.db.elephantsql.com/irk?schema=shadow"`
-4. `npm ci` to install dependencies
-5. `npx prisma migrate reset` to build the database tables and insert some seed data (as defined in [./prisma/seed.js](./prisma/seed.js))
-6. `npm run dev` to run the app
-
-## API Spec
-
-[todo]: <Deploy and update the link below>
-
-[Deployed API Spec](https://UPDATEME)
-
-The API Spec is hosted by the server itself (i.e. this project), and the view/page is generated automatically by the SwaggerUI libraryi.
-
-To view it locally, you can just go to: [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
-
-Whenever you make any change to the API (e.g. adding a new route, changing the payload for an existing route, adding a new error), you must update the API Spec accordingly. To do this, you just need to update the `openapi.yaml` file -- guidance on the basic structure of the `openapi.yaml` file can be found [here](https://swagger.io/docs/specification/about/).
-
-- **You should always verify these changes locally before committing your work.**
-- If your server is already running when you changed the `openapi.yaml` file, you will need to stop and restart your server.
-- Once verified, stage and commit the changes on the same branch where you changed the behaviour of the API.
-
-## DATABASE ERD
-
-[todo]: <Update this with your ERD>
-
-TODO - add ERD
